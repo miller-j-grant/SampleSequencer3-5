@@ -1,0 +1,76 @@
+﻿/***************************************************************************************
+    Title: NAudioWPFDemo Source Code
+    Author: Mark Heath
+    Date: November 4, 2017
+    Availability: http://naudio.codeplex.com/SourceControl/latest#readme.txt
+***************************************************************************************/
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NAudio.Wave;
+
+namespace SampleSequencer3_5
+{
+    class MusicSampleProvider : ISampleProvider
+    {
+        private int delayBy;
+        private int position;
+        private readonly SampleSource sampleSource;
+
+        public MusicSampleProvider(SampleSource sampleSource)
+        {
+            this.sampleSource = sampleSource;
+        }
+
+        // Samples to delay before returning anything
+        public int DelayBy
+        {
+            get { return delayBy; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Cannot delay by negative number of samples");
+                }
+                delayBy = value;
+            }
+        }
+
+        public WaveFormat WaveFormat
+        {
+            get { return this.sampleSource.SampleWaveFormat; }
+        }
+
+        public int Read(float[] buffer, int offset, int count)
+        {
+            int samplesWritten = 0;
+            if (position < delayBy)
+            {
+                int zeroFill = Math.Min(delayBy - position, count);
+                Array.Clear(buffer, offset, zeroFill);
+                position += zeroFill;
+                samplesWritten += zeroFill;
+            }
+            if (samplesWritten < count)
+            {
+                int samplesNeeded = count - samplesWritten;
+                int samplesAvailable = sampleSource.Length - (position - delayBy);
+                int samplesToCopy = Math.Min(samplesNeeded, samplesAvailable);
+                Array.Copy(sampleSource.SampleData, PositionInSampleSource, buffer, samplesWritten, samplesToCopy);
+                position += samplesToCopy;
+                samplesWritten += samplesToCopy;
+            }
+            return samplesWritten;
+        }
+
+        private int PositionInSampleSource
+        {
+            get
+            {
+                return (position - delayBy) + sampleSource.StartIndex;
+            }
+        }
+    }
+}

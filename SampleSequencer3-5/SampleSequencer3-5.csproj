@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio">
+      <HintPath>..\..\..\NAudio-1.8.0-Release\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,8 +54,23 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MusicSampleProvider.cs" />
+    <Compile Include="Pattern.cs" />
+    <Compile Include="PatternSampleProvider.cs" />
+    <Compile Include="PatternSequencer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SampleControlsCollection.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SampleControlsCollection.Designer.cs">
+      <DependentUpon>SampleControlsCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Samples.cs" />
+    <Compile Include="SampleSource.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
