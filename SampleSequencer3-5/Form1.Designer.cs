@@ -219,7 +219,7 @@
             this.stopButtonPattern0.TabIndex = 3;
             this.stopButtonPattern0.Text = "Pattern 1 Stop";
             this.stopButtonPattern0.UseVisualStyleBackColor = true;
-            //ADD EVENT HANDLER HERE
+            this.stopButtonPattern0.Click += new System.EventHandler(stopPlaybackButton_Click);
             // 
             // playbackButtonPattern0
             // 

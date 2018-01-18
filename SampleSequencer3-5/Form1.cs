@@ -231,6 +231,7 @@ namespace SampleSequencer3_5
             dataGridView.AutoSize = false;
             //ADD EVENT HANDLERS HERE
             panel.Controls.Add(dataGridView);
+            dgvList.Add(dataGridView);
 
             Button playButton = new Button();
             playButton.Name = "playbackButtonPattern" + (patternPanels.Count - 1);
@@ -400,7 +401,8 @@ namespace SampleSequencer3_5
         {
             for (int note = 0; note < patternList[patternNum].Notes; note++)
             {
-                patternDataGrid0.Rows[note].Cells[0].Value = patternList[patternNum].NoteNames[note];
+                //dgvList[patternNum].Rows[note].Cells[0].Value = patternList[patternNum].NoteNames[note];
+                dgvList[patternNum].Rows[note].Cells[0].Value = notes[note];
             }
         }
 
@@ -416,13 +418,13 @@ namespace SampleSequencer3_5
                 {
                     if (GetBackColor(note, step, patternNum) == true)
                     {
-                        patternDataGrid0.Rows[note].Cells[step + 1].Style.BackColor = Color.LightSalmon;
+                        dgvList[patternNum].Rows[note].Cells[step + 1].Style.BackColor = Color.LightSalmon;
                     }
                     else
                     {
-                        patternDataGrid0.Rows[note].Cells[step + 1].Style.BackColor = Color.White;
+                        dgvList[patternNum].Rows[note].Cells[step + 1].Style.BackColor = Color.White;
                     }
-                    patternDataGrid0.Rows[note].Cells[step + 1].Tag = new PatternIndex(note, step);
+                    dgvList[patternNum].Rows[note].Cells[step + 1].Tag = new PatternIndex(note, step);
 
                 }
             }
