@@ -18,12 +18,15 @@ namespace SampleSequencer3_5
         private PatternSampleProvider patternSequencer;
         private List<PatternSampleProvider> pspList;
         private int tempo;
-        private List<string> notes;
-        private List<SampleControlsCollection> sccList;
+        private List<List<string>> notesList;
+        //private List<string> notes;
+        //private List<SampleControlsCollection> sccList;
+        private List<List<SampleControlsCollection>> sccListsList;
         private List<Panel> patternPanels;
         private List<Panel> sccPanels;
         private List<DataGridView> dgvList;
-        private Form sccForm;
+        private List<Form> sccFormsList;
+        //private Form sccForm;
         //private MixingSampleProvider mixer;
 
         public Form1()
@@ -32,16 +35,25 @@ namespace SampleSequencer3_5
 
             //Initialize the form properties.
             tempo = Convert.ToInt32(tempoTextBox.Text);
-            sccList = new List<SampleControlsCollection>();
-            notes = new List<string>();
+            List<SampleControlsCollection> sccList = new List<SampleControlsCollection>();
+            List<string> notes = new List<string>();
             sccPanels = new List<Panel>();
             patternPanels = new List<Panel>();
             patternList = new List<Pattern>();
             dgvList = new List<DataGridView>();
             pspList = new List<PatternSampleProvider>();
+            notesList = new List<List<string>>();
+            sccFormsList = new List<Form>();
+            sccListsList = new List<List<SampleControlsCollection>>();
 
-            sccForm = new Form();
-            sccForm.AutoSize = true;
+            sccListsList.Add(sccList);
+
+            notesList.Add(notes);
+
+            Form sccForm = new Form();
+            sccForm.AutoScroll = true;
+
+            sccFormsList.Add(sccForm);
 
             patternPanels.Add(patternPanel0);
 
@@ -111,6 +123,8 @@ namespace SampleSequencer3_5
             this.newPatternToolStripMenuItem.Click += new System.EventHandler(newPatternToolStripMenuItem_Click);
             this.masterPlaybackToolStripButton.Click += (sender, e) => masterPlaybackButton_Click(sender, e, -1);
             this.playbackButtonPattern0.Click += (sender, e) => masterPlaybackButton_Click(sender, e, 0);
+            this.clearPatternButtonPattern0.Click += (sender, e) => clearPatternButton_Click(sender, e, 0);
+            this.newSampleButtonPattern0.Click += (sender, e) => newSampleMenuItem_Click(sender, e, 0);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -147,6 +161,7 @@ namespace SampleSequencer3_5
         private void newSampleMenuItem_Click(object sender, EventArgs e, int patternNum)
         {
             string defaultFile = "D:\\VS Workspace\\NAudioSampleSequencerForms\\NAudioSampleSequencerForms\\Samples\\snare-trimmed.wav";
+            List<SampleControlsCollection> sccList = sccListsList[patternNum];
 
             SampleControlsCollection scc = new SampleControlsCollection();
             sccList.Add(scc);
@@ -198,6 +213,8 @@ namespace SampleSequencer3_5
         /// <param name="e"></param>
         private void setSamplesButton_Click(object sender, EventArgs e, int patternNum)
         {
+            List<SampleControlsCollection> sccList = sccListsList[patternNum];
+            List<string> notes = notesList[patternNum];
             for (int i = 0; i < sccList.Count; i++)
             {
                 //Set new note name
@@ -262,7 +279,7 @@ namespace SampleSequencer3_5
             newSampleButton.Text = "New Sample";
             newSampleButton.Location = new Point(755, 129);
             newSampleButton.Size = new Size(154, 31);
-            //ADD EVENT HANDLERS HERE
+            newSampleButton.Click += (senderr, ee) => newSampleMenuItem_Click(sender, ee, patternNum);
             panel.Controls.Add(newSampleButton);
 
             Button clearPatternButton = new Button();
@@ -270,7 +287,7 @@ namespace SampleSequencer3_5
             clearPatternButton.Text = "Clear Pattern";
             clearPatternButton.Location = new Point(755, 166);
             clearPatternButton.Size = new Size(154, 31);
-            //ADD EVENT HANDLERS HERE
+            clearPatternButton.Click += (senderr, ee) => clearPatternButton_Click(sender, ee, patternNum);
             panel.Controls.Add(clearPatternButton);
 
             CheckBox checkBox = new CheckBox();
@@ -283,7 +300,8 @@ namespace SampleSequencer3_5
 
             //Add the new SampleControlsCollections for the new Pattern.
             Panel sccPanel = new Panel();
-            sccPanel.Location = new Point(0 + (750 * (sccPanels.Count)), 0);
+            sccPanel.Location = new Point(0, 0);
+            //sccPanel.Location = new Point(0, 0 + (100 * (sccList.Count)));
             sccPanel.AutoSize = true;
             sccPanels.Add(sccPanel);
 
@@ -298,6 +316,8 @@ namespace SampleSequencer3_5
                 patternSequencer.Samples.FilePaths[2],
                 patternSequencer.Samples.FilePaths[3]};
 
+            List<SampleControlsCollection> sccList = new List<SampleControlsCollection>();
+
             for (int i = 0; i < 4; i++)
             {
                 SampleControlsCollection scc = new SampleControlsCollection();
@@ -309,7 +329,24 @@ namespace SampleSequencer3_5
                 sccPanel.Controls.Add(scc);
             }
 
+            sccListsList.Add(sccList);
+
+            Form sccForm = new Form();
+            sccForm.AutoScroll = true;
+
             sccForm.Controls.Add(sccPanel);
+            sccForm.Show();
+
+            sccFormsList.Add(sccForm);
+
+            List<string> notes = new List<string>();
+
+            notes.Add("kick-trimmed.wav");
+            notes.Add("snare-trimmed.wav");
+            notes.Add("closed-hats-trimmed.wav");
+            notes.Add("open-hats-trimmed.wav");
+
+            notesList.Add(notes);
 
             //initialize the Pattern
             Pattern pattern = new Pattern(notes, 16);
@@ -339,21 +376,22 @@ namespace SampleSequencer3_5
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        //private void clearPatternButton_Click(object sender, EventArgs e)
-        //{
-        //    for (int step = 0; step < pattern.Steps; step++)
-        //    {
-        //        for (int note = 0; note < pattern.Notes; note++)
-        //        {
-        //            if (GetBackColor(note, step) == true)
-        //            {
-        //                this.pattern[note, step] = 0;
-        //            }
-        //        }
-        //    }
+        private void clearPatternButton_Click(object sender, EventArgs e, int patternNum)
+        {
+            Pattern pattern = patternList[patternNum];
+            for (int step = 0; step < pattern.Steps; step++)
+            {
+                for (int note = 0; note < pattern.Notes; note++)
+                {
+                    if (GetBackColor(note, step,patternNum) == true)
+                    {
+                        pattern[note, step] = 0;
+                    }
+                }
+            }
 
-        //    DrawPattern();
-        //}
+            DrawPattern(patternNum);
+        }
 
         /// <summary>
         /// The AddNewSampleRow function creates a new row in the DataGridView that represents the new sample added by
@@ -364,6 +402,7 @@ namespace SampleSequencer3_5
             string defaultSample = "snare-trimmed.wav";
             var oldPattern = patternList[patternNum];
             Pattern pattern = patternList[patternNum];
+            List<string> notes = notesList[patternNum];
 
             dgvList[patternNum].Rows.Add();
             notes.Add(defaultSample);
@@ -405,6 +444,7 @@ namespace SampleSequencer3_5
         /// </summary>
         private void DrawNoteNames(int patternNum)
         {
+            List<string> notes = notesList[patternNum];
             for (int note = 0; note < patternList[patternNum].Notes; note++)
             {
                 //dgvList[patternNum].Rows[note].Cells[0].Value = patternList[patternNum].NoteNames[note];
