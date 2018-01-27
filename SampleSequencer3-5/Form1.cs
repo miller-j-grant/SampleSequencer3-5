@@ -6,6 +6,7 @@ using NAudio.Wave.SampleProviders;
 using System.Windows.Input;
 using System.ComponentModel;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace SampleSequencer3_5
 {
@@ -49,7 +50,7 @@ namespace SampleSequencer3_5
             patternDataGrid0.RowCount = 4;
             dgvList.Add(patternDataGrid0);
 
-            patternDataGrid0.CellClick += (sender, e) => patternDataGrid_CellClick(sender, e, patternList.Count - 1);
+            patternDataGrid0.CellClick += (sender, e) => patternDataGrid_CellClick(sender, e, 0);
 
             //add the sample names to List for use on the patternDataGrid
             notes.Add("kick-trimmed.wav");
@@ -87,7 +88,7 @@ namespace SampleSequencer3_5
             panel.AutoSize = true;
 
             Label sccLabel = new Label();
-            sccLabel.Text = "Pattern 1";
+            sccLabel.Text = "Pattern 0";
             sccLabel.Location = new Point(0, 0);
             sccLabel.AutoSize = true;
             panel.Controls.Add(sccLabel);
@@ -106,6 +107,10 @@ namespace SampleSequencer3_5
             sccPanels.Add(panel);
             sccForm.Controls.Add(panel);
             sccForm.Show();
+
+            this.newPatternToolStripMenuItem.Click += new System.EventHandler(newPatternToolStripMenuItem_Click);
+            this.masterPlaybackToolStripButton.Click += (sender, e) => masterPlaybackButton_Click(sender, e, -1);
+            this.playbackButtonPattern0.Click += (sender, e) => masterPlaybackButton_Click(sender, e, 0);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -158,7 +163,7 @@ namespace SampleSequencer3_5
 
         private void patternDataGrid_CellClick(object sender, DataGridViewCellEventArgs e, int patternNum)
         {
-            DataGridViewCell cell = patternDataGrid0.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            DataGridViewCell cell = dgvList[patternNum].Rows[e.RowIndex].Cells[e.ColumnIndex];
             PatternIndex pi = (PatternIndex)cell.Tag;
             Pattern pattern = patternList[patternNum];
 
@@ -172,7 +177,7 @@ namespace SampleSequencer3_5
                 cell.Style.BackColor = Color.White;
             }
 
-            patternList[patternNum] = pattern;
+            //patternList[patternNum] = pattern;
         }
 
         /// <summary>
@@ -191,7 +196,7 @@ namespace SampleSequencer3_5
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void setSamplesButton_Click(object sender, EventArgs e)
+        private void setSamplesButton_Click(object sender, EventArgs e, int patternNum)
         {
             for (int i = 0; i < sccList.Count; i++)
             {
@@ -200,7 +205,7 @@ namespace SampleSequencer3_5
                 Char delimiter = '\\';
                 String[] substrings = str.Split(delimiter);
                 notes[i] = substrings[substrings.Length - 1];
-                patternDataGrid0.Rows[i].Cells[0].Value = notes[i];
+                dgvList[patternNum].Rows[i].Cells[0].Value = notes[i];
 
                 //Set sample
                 patternSequencer.Samples.setSample(str, i);
@@ -209,48 +214,51 @@ namespace SampleSequencer3_5
 
         private void newPatternToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            int patternNum = patternList.Count;
+
             //Initialize the new Panel, Label, DataGridView, and Buttons.
             Panel panel = new Panel();
             patternPanels.Add(panel);
-            panel.Name = "patternPanel" + (patternPanels.Count - 1);
-            panel.Location = new Point(7, 0 + (350 * (patternPanels.Count - 1)));
+            panel.Name = "patternPanel" + patternNum;
+            panel.Location = new Point(7, 0 + (350 * (patternNum)));
             panel.AutoSize = true;
             this.Controls.Add(panel);
 
             Label label = new Label();
-            label.Name = "patternLabel" + (patternPanels.Count - 1);
-            label.Text = "Pattern " + (patternPanels.Count);
+            label.Name = "patternLabel" + patternNum;
+            label.Text = "Pattern " + patternNum;
             label.Location = new Point(3, 9);
             label.Size = new Size(66, 17);
             panel.Controls.Add(label);
 
             DataGridView dataGridView = new DataGridView();
-            dataGridView.Name = "patternDataGrid" + (patternPanels.Count - 1);
+            dataGridView.Name = "patternDataGrid" + patternNum;
             dataGridView.Location = new Point(3, 29);
             dataGridView.Size = new Size(750, 250);
             dataGridView.AutoSize = false;
-            //ADD EVENT HANDLERS HERE
+            //Convert.ToInt32(Regex.Replace(dataGridView.Name, @"^[A-Za-z]+", ""))
+            dataGridView.CellClick += (senderr, ee) => patternDataGrid_CellClick(sender, ee, patternNum);
             panel.Controls.Add(dataGridView);
             dgvList.Add(dataGridView);
 
             Button playButton = new Button();
-            playButton.Name = "playbackButtonPattern" + (patternPanels.Count - 1);
-            playButton.Text = "Pattern " + (patternPanels.Count - 1) + " Playback";
+            playButton.Name = "playbackButtonPattern" + patternNum;
+            playButton.Text = "Pattern " + patternNum + " Playback";
             playButton.Location = new Point(755, 29);
             playButton.Size = new Size(154, 31);
-            //ADD EVENT HANDLERS HERE
+            playButton.Click += (senderr, ee) => masterPlaybackButton_Click(sender, ee, patternNum);
             panel.Controls.Add(playButton);
 
             Button stopButton = new Button();
-            stopButton.Name = "stopButtonPattern" + (patternPanels.Count - 1);
-            stopButton.Text = "Pattern " + (patternPanels.Count - 1) + " Stop";
+            stopButton.Name = "stopButtonPattern" + patternNum;
+            stopButton.Text = "Pattern " + patternNum + " Stop";
             stopButton.Location = new Point(755, 66);
             stopButton.Size = new Size(154, 31);
             //ADD EVENT HANDLERS HERE
             panel.Controls.Add(stopButton);
 
             Button newSampleButton = new Button();
-            newSampleButton.Name = "newSampleButtonPattern" + (patternPanels.Count - 1);
+            newSampleButton.Name = "newSampleButtonPattern" + patternNum;
             newSampleButton.Text = "New Sample";
             newSampleButton.Location = new Point(755, 129);
             newSampleButton.Size = new Size(154, 31);
@@ -258,7 +266,7 @@ namespace SampleSequencer3_5
             panel.Controls.Add(newSampleButton);
 
             Button clearPatternButton = new Button();
-            clearPatternButton.Name = "clearPatternButtonPattern" + (patternPanels.Count - 1);
+            clearPatternButton.Name = "clearPatternButtonPattern" + patternNum;
             clearPatternButton.Text = "Clear Pattern";
             clearPatternButton.Location = new Point(755, 166);
             clearPatternButton.Size = new Size(154, 31);
@@ -266,8 +274,8 @@ namespace SampleSequencer3_5
             panel.Controls.Add(clearPatternButton);
 
             CheckBox checkBox = new CheckBox();
-            checkBox.Name = "switchCheckBoxPattern" + (patternPanels.Count - 1);
-            checkBox.Text = "Include Pattern " + (patternPanels.Count) + "in Master Playback";
+            checkBox.Name = "switchCheckBoxPattern" + patternNum;
+            checkBox.Text = "Include Pattern " + patternNum + "in Master Playback";
             checkBox.Location = new Point(755, 215);
             checkBox.AutoSize = true;
             //ADD EVENT HANDLERS HERE
@@ -275,12 +283,12 @@ namespace SampleSequencer3_5
 
             //Add the new SampleControlsCollections for the new Pattern.
             Panel sccPanel = new Panel();
-            sccPanel.Location = new Point(0 + (1000 * (sccPanels.Count)), 0);
+            sccPanel.Location = new Point(0 + (750 * (sccPanels.Count)), 0);
             sccPanel.AutoSize = true;
             sccPanels.Add(sccPanel);
 
             Label sccLabel = new Label();
-            sccLabel.Text = "Pattern " + (sccPanels.Count);
+            sccLabel.Text = "Pattern " + (sccPanels.Count -1);
             sccLabel.Location = new Point(0, 0);
             sccLabel.AutoSize = true;
             sccPanel.Controls.Add(sccLabel);
@@ -295,7 +303,7 @@ namespace SampleSequencer3_5
                 SampleControlsCollection scc = new SampleControlsCollection();
                 sccList.Add(scc);
                 scc.Name = "scc" + (sccList.Count - 1);
-                scc.Location = new Point(0, 0 + (100 * (sccList.Count - 1)));
+                scc.Location = new Point(0, 0 + (100 * i));
                 scc.AddToComboBox(defaultFiles[i]);
 
                 sccPanel.Controls.Add(scc);
@@ -304,15 +312,13 @@ namespace SampleSequencer3_5
             sccForm.Controls.Add(sccPanel);
 
             //initialize the Pattern
-            Pattern pattern = new Pattern(notes,16);
+            Pattern pattern = new Pattern(notes, 16);
             patternList.Add(pattern);
 
             //Initialize the data structures for new pattern.
             //patternDataGrid initialization
             dataGridView.ColumnCount = 17;
             dataGridView.RowCount = 4;
-
-            dataGridView.CellClick += (sender1, e1) => patternDataGrid_CellClick(sender1, e1, patternList.Count - 1);
 
             // auto-setup with a simple example beat
             pattern[0, 0] = pattern[0, 8] = 127;
@@ -323,8 +329,8 @@ namespace SampleSequencer3_5
             }
 
             //"draw" the sample names and the pattern onto the patternDataGrid
-            DrawNoteNames(patternList.Count - 1);
-            DrawPattern(patternList.Count - 1);
+            DrawNoteNames(patternNum);
+            DrawPattern(patternNum);
         }
 
         /// <summary>

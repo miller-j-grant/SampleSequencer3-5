@@ -47,12 +47,12 @@
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.patternPanel0 = new System.Windows.Forms.Panel();
+            this.clearPatternButtonPattern0 = new System.Windows.Forms.Button();
+            this.newSampleButtonPattern0 = new System.Windows.Forms.Button();
             this.stopButtonPattern0 = new System.Windows.Forms.Button();
             this.playbackButtonPattern0 = new System.Windows.Forms.Button();
-            this.pattern1Label = new System.Windows.Forms.Label();
+            this.pattern0Label = new System.Windows.Forms.Label();
             this.patternDataGrid0 = new System.Windows.Forms.DataGridView();
-            this.newSampleButtonPattern0 = new System.Windows.Forms.Button();
-            this.clearPatternButtonPattern0 = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.patternPanel0.SuspendLayout();
@@ -84,9 +84,8 @@
             // newPatternToolStripMenuItem
             // 
             this.newPatternToolStripMenuItem.Name = "newPatternToolStripMenuItem";
-            this.newPatternToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.newPatternToolStripMenuItem.Size = new System.Drawing.Size(164, 26);
             this.newPatternToolStripMenuItem.Text = "New Pattern";
-            this.newPatternToolStripMenuItem.Click += new System.EventHandler(this.newPatternToolStripMenuItem_Click);
             // 
             // toolStrip2
             // 
@@ -151,7 +150,6 @@
             this.masterPlaybackToolStripButton.Name = "masterPlaybackToolStripButton";
             this.masterPlaybackToolStripButton.Size = new System.Drawing.Size(120, 24);
             this.masterPlaybackToolStripButton.Text = "Master Playback";
-            this.masterPlaybackToolStripButton.Click += (sender, e) => masterPlaybackButton_Click(sender, e, -1);
             // 
             // toolStripSeparator3
             // 
@@ -204,60 +202,12 @@
             this.patternPanel0.Controls.Add(this.newSampleButtonPattern0);
             this.patternPanel0.Controls.Add(this.stopButtonPattern0);
             this.patternPanel0.Controls.Add(this.playbackButtonPattern0);
-            this.patternPanel0.Controls.Add(this.pattern1Label);
+            this.patternPanel0.Controls.Add(this.pattern0Label);
             this.patternPanel0.Controls.Add(this.patternDataGrid0);
             this.patternPanel0.Location = new System.Drawing.Point(12, 57);
             this.patternPanel0.Name = "patternPanel0";
             this.patternPanel0.Size = new System.Drawing.Size(1166, 332);
             this.patternPanel0.TabIndex = 2;
-            // 
-            // stopButtonPattern0
-            // 
-            this.stopButtonPattern0.Location = new System.Drawing.Point(1009, 66);
-            this.stopButtonPattern0.Name = "stopButtonPattern0";
-            this.stopButtonPattern0.Size = new System.Drawing.Size(154, 31);
-            this.stopButtonPattern0.TabIndex = 3;
-            this.stopButtonPattern0.Text = "Pattern 1 Stop";
-            this.stopButtonPattern0.UseVisualStyleBackColor = true;
-            this.stopButtonPattern0.Click += new System.EventHandler(stopPlaybackButton_Click);
-            // 
-            // playbackButtonPattern0
-            // 
-            this.playbackButtonPattern0.Location = new System.Drawing.Point(1009, 29);
-            this.playbackButtonPattern0.Name = "playbackButtonPattern0";
-            this.playbackButtonPattern0.Size = new System.Drawing.Size(154, 31);
-            this.playbackButtonPattern0.TabIndex = 2;
-            this.playbackButtonPattern0.Text = "Pattern 1 Playback";
-            this.playbackButtonPattern0.UseVisualStyleBackColor = true;
-            this.playbackButtonPattern0.Click += (sender, e) => masterPlaybackButton_Click(sender, e, 0);
-            // 
-            // pattern1Label
-            // 
-            this.pattern1Label.AutoSize = true;
-            this.pattern1Label.Location = new System.Drawing.Point(3, 9);
-            this.pattern1Label.Name = "pattern1Label";
-            this.pattern1Label.Size = new System.Drawing.Size(66, 17);
-            this.pattern1Label.TabIndex = 1;
-            this.pattern1Label.Text = "Pattern 1";
-            // 
-            // patternDataGrid0
-            // 
-            this.patternDataGrid0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.patternDataGrid0.Location = new System.Drawing.Point(3, 29);
-            this.patternDataGrid0.Name = "patternDataGrid0";
-            this.patternDataGrid0.RowTemplate.Height = 24;
-            this.patternDataGrid0.Size = new System.Drawing.Size(1000, 300);
-            this.patternDataGrid0.TabIndex = 0;
-            // 
-            // newSampleButtonPattern0
-            // 
-            this.newSampleButtonPattern0.Location = new System.Drawing.Point(1009, 129);
-            this.newSampleButtonPattern0.Name = "newSampleButtonPattern0";
-            this.newSampleButtonPattern0.Size = new System.Drawing.Size(154, 31);
-            this.newSampleButtonPattern0.TabIndex = 4;
-            this.newSampleButtonPattern0.Text = "New Sample";
-            this.newSampleButtonPattern0.UseVisualStyleBackColor = true;
-            //ADD EVENT HANDLER HERE
             // 
             // clearPatternButtonPattern0
             // 
@@ -267,7 +217,52 @@
             this.clearPatternButtonPattern0.TabIndex = 5;
             this.clearPatternButtonPattern0.Text = "Clear Pattern";
             this.clearPatternButtonPattern0.UseVisualStyleBackColor = true;
-            //ADD EVENT HANDLER HERE
+            // 
+            // newSampleButtonPattern0
+            // 
+            this.newSampleButtonPattern0.Location = new System.Drawing.Point(1009, 129);
+            this.newSampleButtonPattern0.Name = "newSampleButtonPattern0";
+            this.newSampleButtonPattern0.Size = new System.Drawing.Size(154, 31);
+            this.newSampleButtonPattern0.TabIndex = 4;
+            this.newSampleButtonPattern0.Text = "New Sample";
+            this.newSampleButtonPattern0.UseVisualStyleBackColor = true;
+            // 
+            // stopButtonPattern0
+            // 
+            this.stopButtonPattern0.Location = new System.Drawing.Point(1009, 66);
+            this.stopButtonPattern0.Name = "stopButtonPattern0";
+            this.stopButtonPattern0.Size = new System.Drawing.Size(154, 31);
+            this.stopButtonPattern0.TabIndex = 3;
+            this.stopButtonPattern0.Text = "Pattern 0 Stop";
+            this.stopButtonPattern0.UseVisualStyleBackColor = true;
+            this.stopButtonPattern0.Click += new System.EventHandler(this.stopPlaybackButton_Click);
+            // 
+            // playbackButtonPattern0
+            // 
+            this.playbackButtonPattern0.Location = new System.Drawing.Point(1009, 29);
+            this.playbackButtonPattern0.Name = "playbackButtonPattern0";
+            this.playbackButtonPattern0.Size = new System.Drawing.Size(154, 31);
+            this.playbackButtonPattern0.TabIndex = 2;
+            this.playbackButtonPattern0.Text = "Pattern 0 Playback";
+            this.playbackButtonPattern0.UseVisualStyleBackColor = true;
+            // 
+            // pattern0Label
+            // 
+            this.pattern0Label.AutoSize = true;
+            this.pattern0Label.Location = new System.Drawing.Point(3, 9);
+            this.pattern0Label.Name = "pattern0Label";
+            this.pattern0Label.Size = new System.Drawing.Size(66, 17);
+            this.pattern0Label.TabIndex = 1;
+            this.pattern0Label.Text = "Pattern 0";
+            // 
+            // patternDataGrid0
+            // 
+            this.patternDataGrid0.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.patternDataGrid0.Location = new System.Drawing.Point(3, 29);
+            this.patternDataGrid0.Name = "patternDataGrid0";
+            this.patternDataGrid0.RowTemplate.Height = 24;
+            this.patternDataGrid0.Size = new System.Drawing.Size(1000, 300);
+            this.patternDataGrid0.TabIndex = 0;
             // 
             // Form1
             // 
@@ -315,7 +310,7 @@
         private System.Windows.Forms.Panel patternPanel0;
         private System.Windows.Forms.Button stopButtonPattern0;
         private System.Windows.Forms.Button playbackButtonPattern0;
-        private System.Windows.Forms.Label pattern1Label;
+        private System.Windows.Forms.Label pattern0Label;
         private System.Windows.Forms.DataGridView patternDataGrid0;
         private System.Windows.Forms.Button clearPatternButtonPattern0;
         private System.Windows.Forms.Button newSampleButtonPattern0;
