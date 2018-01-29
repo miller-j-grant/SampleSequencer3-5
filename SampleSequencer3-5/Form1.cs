@@ -125,6 +125,7 @@ namespace SampleSequencer3_5
             this.playbackButtonPattern0.Click += (sender, e) => masterPlaybackButton_Click(sender, e, 0);
             this.clearPatternButtonPattern0.Click += (sender, e) => clearPatternButton_Click(sender, e, 0);
             this.newSampleButtonPattern0.Click += (sender, e) => newSampleMenuItem_Click(sender, e, 0);
+            this.setAllSamplesToolStripButton.Click += new System.EventHandler(setSamplesButton_Click);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -211,21 +212,24 @@ namespace SampleSequencer3_5
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void setSamplesButton_Click(object sender, EventArgs e, int patternNum)
+        private void setSamplesButton_Click(object sender, EventArgs e)
         {
-            List<SampleControlsCollection> sccList = sccListsList[patternNum];
-            List<string> notes = notesList[patternNum];
-            for (int i = 0; i < sccList.Count; i++)
+            for(int patternNum = 0; patternNum < sccListsList.Count; patternNum++)
             {
-                //Set new note name
-                String str = sccList[i].sampleSourceComboBox.SelectedItem.ToString();
-                Char delimiter = '\\';
-                String[] substrings = str.Split(delimiter);
-                notes[i] = substrings[substrings.Length - 1];
-                dgvList[patternNum].Rows[i].Cells[0].Value = notes[i];
+                List<SampleControlsCollection> sccList = sccListsList[patternNum];
+                List<string> notes = notesList[patternNum];
+                for (int i = 0; i < sccList.Count; i++)
+                {
+                    //Set new note name
+                    String str = sccList[i].sampleSourceComboBox.SelectedItem.ToString();
+                    Char delimiter = '\\';
+                    String[] substrings = str.Split(delimiter);
+                    notes[i] = substrings[substrings.Length - 1];
+                    dgvList[patternNum].Rows[i].Cells[0].Value = notes[i];
 
-                //Set sample
-                patternSequencer.Samples.setSample(str, i);
+                    //Set sample
+                    patternSequencer.Samples.setSample(str, i);
+                }
             }
         }
 
