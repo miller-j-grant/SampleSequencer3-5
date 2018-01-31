@@ -203,7 +203,7 @@ namespace SampleSequencer3_5
         /// <param name="e"></param>
         private void setTempoButton_Click(object sender, EventArgs e)
         {
-            tempo = Convert.ToInt32(tempoTextBox.Text);
+            this.tempo = Convert.ToInt32(tempoTextBox.Text);
         }
 
         /// <summary>
@@ -520,7 +520,7 @@ namespace SampleSequencer3_5
                 }
                 waveOut = new WaveOut();
                 this.patternSequencer.Reset(patternList[patternNum]);
-                //this.patternSequencer.Tempo = tempo;
+                this.patternSequencer.Tempo = tempo;
                 waveOut.Init(patternSequencer);
                 waveOut.Play();
 
