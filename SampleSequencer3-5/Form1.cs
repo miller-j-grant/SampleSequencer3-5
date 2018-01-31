@@ -121,8 +121,8 @@ namespace SampleSequencer3_5
             sccForm.Show();
 
             this.newPatternToolStripMenuItem.Click += new System.EventHandler(newPatternToolStripMenuItem_Click);
-            this.masterPlaybackToolStripButton.Click += (sender, e) => masterPlaybackButton_Click(sender, e, -1);
-            this.playbackButtonPattern0.Click += (sender, e) => masterPlaybackButton_Click(sender, e, 0);
+            this.masterPlaybackToolStripButton.Click += (sender, e) => masterPlaybackButton_Click(sender, e, 0, true);
+            this.playbackButtonPattern0.Click += (sender, e) => masterPlaybackButton_Click(sender, e, 0, false);
             this.clearPatternButtonPattern0.Click += (sender, e) => clearPatternButton_Click(sender, e, 0);
             this.newSampleButtonPattern0.Click += (sender, e) => newSampleMenuItem_Click(sender, e, 0);
             this.setAllSamplesToolStripButton.Click += new System.EventHandler(setSamplesButton_Click);
@@ -138,9 +138,9 @@ namespace SampleSequencer3_5
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void masterPlaybackButton_Click(object sender, EventArgs e, int patternNum)
+        private void masterPlaybackButton_Click(object sender, EventArgs e, int patternNum, bool master)
         {
-            Play(patternNum);
+            Play(patternNum, master);
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace SampleSequencer3_5
             playButton.Text = "Pattern " + patternNum + " Playback";
             playButton.Location = new Point(755, 29);
             playButton.Size = new Size(154, 31);
-            playButton.Click += (senderr, ee) => masterPlaybackButton_Click(sender, ee, patternNum);
+            playButton.Click += (senderr, ee) => masterPlaybackButton_Click(sender, ee, patternNum, false);
             panel.Controls.Add(playButton);
 
             Button stopButton = new Button();
@@ -427,22 +427,6 @@ namespace SampleSequencer3_5
         }
 
         /// <summary>
-        /// The Play function starts playback of the drum machine.
-        /// </summary>
-        private void Play(int patternNum)
-        {
-            if (waveOut != null)
-            {
-                Stop();
-            }
-            waveOut = new WaveOut();
-            this.patternSequencer.Reset(patternList[patternNum]);
-            this.patternSequencer.Tempo = tempo;
-            waveOut.Init(patternSequencer);
-            waveOut.Play();
-        }
-
-        /// <summary>
         /// The DrawNoteNames function changes the values of the left most column to be the names of the samples currently
         /// set by the user.
         /// </summary>
@@ -516,6 +500,47 @@ namespace SampleSequencer3_5
         }
 
         /// <summary>
+        /// The Play function starts playback of the drum machine.
+        /// </summary>
+        private void Play(int patternNum, bool master)
+        {
+            // 16 / (tempo / 60)
+            int wait = (16 / (this.tempo / 60)) * 1000;
+
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Interval = wait;
+            timer.Tick += (sender, e) => timer_Elapsed(sender, e, patternNum);
+
+            if (master == true)
+            {
+                if (waveOut != null)
+                {
+                    waveOut.Dispose();
+                    waveOut = null;
+                }
+                waveOut = new WaveOut();
+                this.patternSequencer.Reset(patternList[patternNum]);
+                //this.patternSequencer.Tempo = tempo;
+                waveOut.Init(patternSequencer);
+                waveOut.Play();
+
+                timer.Start();
+            }
+            else
+            {
+                if (waveOut != null)
+                {
+                    Stop();
+                }
+                waveOut = new WaveOut();
+                this.patternSequencer.Reset(patternList[patternNum]);
+                this.patternSequencer.Tempo = tempo;
+                waveOut.Init(patternSequencer);
+                waveOut.Play();
+            }
+        }
+
+        /// <summary>
         /// The Stop function stops the playback of the drum machine.
         /// </summary>
         private void Stop()
@@ -524,6 +549,20 @@ namespace SampleSequencer3_5
             {
                 waveOut.Dispose();
                 waveOut = null;
+            }
+        }
+
+        private void timer_Elapsed(object sender, EventArgs e, int patternNum)
+        {
+            int newPatternNum = patternNum + 1;
+            if (newPatternNum < patternList.Count)
+            {
+                Play(newPatternNum, true);
+            }
+            else
+            {
+                newPatternNum = 0;
+                Play(newPatternNum, true);
             }
         }
     }
